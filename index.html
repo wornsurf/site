@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride the Set with Wornsurf</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-dark: #2d4a52;
+            --color-darker: #1f3238;
+            --color-teal: #3eaba3;
+            --color-coral: #f18b7f;
+            --color-cream: #f5f3ed;
+            --color-navy: #2f4858;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background: var(--color-dark);
+            color: var(--color-cream);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Grain texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3.5' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.08;
+            z-index: 100;
+            mix-blend-mode: overlay;
+            animation: grainShift 8s steps(10) infinite;
+        }
+
+        @keyframes grainShift {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-2%, -2%); }
+            20% { transform: translate(-4%, 2%); }
+            30% { transform: translate(2%, -4%); }
+            40% { transform: translate(-2%, 4%); }
+            50% { transform: translate(4%, -2%); }
+            60% { transform: translate(-4%, -4%); }
+            70% { transform: translate(2%, 4%); }
+            80% { transform: translate(4%, 2%); }
+            90% { transform: translate(-4%, 2%); }
+        }
+
+        .logo {
+            width: 168px;
+            height: 168px;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(241, 139, 127, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 30%, rgba(62, 171, 163, 0.18) 0%, transparent 50%),
+                var(--color-dark);
+            background-size: 250% 250%;
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--color-coral);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.2s forwards;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            font-family: var(--font-display);
+        }
+
+        h1 .line {
+            display: block;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        h1 .line:nth-child(1) {
+            animation-delay: 0.4s;
+        }
+
+        h1 .line:nth-child(2) {
+            animation-delay: 0.6s;
+        }
+
+        h1 .creative {
+            color: var(--color-coral);
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            max-width: 600px;
+            color: rgba(245, 243, 237, 0.8);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.8s forwards;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 1s forwards;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: width 0.6s, height 0.6s, top 0.6s, left 0.6s;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: var(--color-coral);
+            color: var(--color-cream);
+            border: 2px solid var(--color-coral);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(241, 139, 127, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-cream);
+            border: 2px solid var(--color-cream);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-cream);
+            color: var(--color-dark);
+        }
+
+        .icon {
+            width: 18px;
+            height: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.5s forwards;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 0.8;
+        }
+
+        .wave-icon {
+            width: 180px;
+            height: 50px;
+            color: var(--color-coral);
+        }
+
+        .wave-path {
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+            animation: drawWave 3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+        @keyframes drawWave {
+            0% {
+                stroke-dashoffset: 300;
+            }
+            40% {
+                stroke-dashoffset: 0;
+            }
+            100% {
+                stroke-dashoffset: -300;
+            }
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--color-coral), transparent);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(-50%, 0);
+            }
+            50% {
+                transform: translate(-50%, -10px);
+            }
+        }
+
+        /* Decorative elements */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            right: 10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(241, 139, 127, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            animation: pulse 4s ease-in-out infinite, fadeIn 2s ease-out forwards;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cta-group {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: clamp(2.5rem, 8vw, 4rem);
+            }
+        }
+
+        /* About Section */
+        .about {
+            background: var(--color-cream);
+            color: var(--color-navy);
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .about-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--color-coral);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .about h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            color: var(--color-navy);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.2s forwards;
+        }
+
+        .about h2 .highlight {
+            color: var(--color-teal);
+            font-style: italic;
+        }
+
+        .about-content p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: rgba(47, 72, 88, 0.85);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.4s forwards;
+        }
+
+        .about-content p.intro {
+            font-size: 1.3rem;
+            color: var(--color-navy);
+            margin-bottom: 2rem;
+            animation-delay: 0.3s;
+        }
+
+        .about-content p.closing {
+            font-style: italic;
+            color: rgba(47, 72, 88, 0.7);
+            margin-top: 2rem;
+            animation-delay: 0.8s;
+        }
+
+        .skills-grid {
+            display: grid;
+            gap: 2rem;
+            margin: 3rem 0;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.6s forwards;
+        }
+
+        .skill-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(62, 171, 163, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: var(--color-teal);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(62, 171, 163, 0.15);
+        }
+
+        .skill-icon {
+            width: 32px;
+            height: 32px;
+            color: var(--color-coral);
+            flex-shrink: 0;
+            margin-top: 0.25rem;
+        }
+
+        .skill-item h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--color-navy);
+        }
+
+        .skill-item p {
+            font-size: 0.95rem;
+            margin: 0;
+            color: rgba(47, 72, 88, 0.7);
+            opacity: 1;
+            animation: none;
+        }
+
+        .btn-resume {
+            margin-top: 2.5rem;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+            color: var(--color-teal);
+            border: 2px solid var(--color-teal);
+        }
+
+        .btn-resume::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(62, 171, 163, 0.1);
+            transition: width 0.6s, height 0.6s, top 0.6s, left 0.6s;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn-resume:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-resume:hover {
+            background: var(--color-teal);
+            color: var(--color-cream);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(62, 171, 163, 0.25);
+        }
+
+        .btn-resume span,
+        .btn-resume .icon {
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .about {
+                padding: 5rem 1.5rem;
+            }
+
+            .skills-grid {
+                gap: 1.5rem;
+            }
+
+            .skill-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-resume {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--color-teal);
+            color: var(--color-cream);
+            padding: 8rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 80% 20%, rgba(241, 139, 127, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(45, 74, 82, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+            background-size: 200% 200%;
+            animation: gradientShift 25s ease-in-out infinite;
+        }
+
+        .contact-container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact .section-label {
+            color: var(--color-dark);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.25em;
+        }
+
+        .contact h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--color-cream);
+        }
+
+        .contact h2 .line-break {
+            display: block;
+        }
+
+        .contact h2 .highlight {
+            color: var(--color-coral);
+            font-style: italic;
+            font-weight: 600;
+        }
+
+        .contact-intro {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            color: rgba(245, 243, 237, 0.85);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-cream);
+            opacity: 0.9;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 1rem 1.25rem;
+            border: 2px solid rgba(245, 243, 237, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--color-cream);
+            font-family: var(--font-display);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(245, 243, 237, 0.4);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-coral);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(241, 139, 127, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.6;
+        }
+
+        .btn-submit {
+            margin-top: 1rem;
+            align-self: flex-start;
+        }
+
+        @media (max-width: 768px) {
+            .contact {
+                padding: 5rem 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .btn-submit {
+                width: 100%;
+            }
+        }
+
+        /* Video Modal */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .video-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+        }
+
+        .video-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: transparent;
+            border: none;
+            color: var(--color-cream);
+            font-size: 3rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .video-close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 768px) {
+            .video-modal-content {
+                width: 95%;
+            }
+
+            .video-close {
+                top: -45px;
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="hero">
+        <img src="logo.png" alt="Wornsurf Logo" class="logo" />
+        
+        <h1>
+            <span class="line">Ride the</span>
+            <span class="line"><span class="creative">Creative</span> Wave</span>
+        </h1>
+        
+        <p class="tagline">
+            Wornsurf crafts captivating visuals with a timeless, sun-drenched spirit for brands that dare to feel something.
+        </p>
+        
+        <div class="cta-group">
+            <a href="#" class="btn btn-primary" onclick="openVideoModal(event)">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"></polygon>
+                </svg>
+                <span>Watch Reel</span>
+            </a>
+            <a href="#contact" class="btn btn-secondary" onclick="event.preventDefault(); document.querySelector('.contact').scrollIntoView({behavior: 'smooth'})">
+                <span>Start Your Project</span>
+            </a>
+        </div>
+
+        <div class="scroll-indicator" onclick="document.querySelector('.about').scrollIntoView({behavior: 'smooth'})">
+            <svg class="wave-icon" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="wave-path" d="M 0 30 Q 25 10, 50 30 T 100 30 T 150 30 T 200 30" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </main>
+
+    <section class="about">
+        <div class="about-container">
+            <div class="about-content">
+                <div class="section-label">About</div>
+                <h2>Crafting nostalgia for the <span class="highlight">digital age</span></h2>
+                <p class="intro">I'm Jeremy Albert, an animation leader obsessed with the warmth of analog media. With over 18 years in motion design and VFX, I translate that soulful, imperfect aesthetic into high-end motion graphics for brands that want to stand out in a sterile digital world.</p>
+                
+                <p>As SVP of Animation, I lead teams through integrated campaigns, oversee creative strategies, and troubleshoot technical challenges at the project level. I thrive in the details: reviewing animation work, refining pipeline processes, and ensuring every frame captures something real.</p>
+
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                            <line x1="7" y1="2" x2="7" y2="22"></line>
+                            <line x1="17" y1="2" x2="17" y2="22"></line>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <line x1="2" y1="7" x2="7" y2="7"></line>
+                            <line x1="2" y1="17" x2="7" y2="17"></line>
+                            <line x1="17" y1="17" x2="22" y2="17"></line>
+                            <line x1="17" y1="7" x2="22" y2="7"></line>
+                        </svg>
+                        <div>
+                            <h3>Motion Design</h3>
+                            <p>Riding the rhythm of timing and flow, carving through keyframes</p>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                        <div>
+                            <h3>VFX & Compositing</h3>
+                            <p>Texture, grain, and that analog feel</p>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6"></path>
+                            <path d="M1 12h6m6 0h6"></path>
+                        </svg>
+                        <div>
+                            <h3>Creative Direction</h3>
+                            <p>Leading teams, building pipelines, growing brands</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="closing">During off hours, you'll find me riding my bicycle, skateboarding, surfing, playing soccer—or just hanging with my family. All the things that fuel that sun-drenched, worn-in aesthetic.</p>
+
+                <a href="https://rxresu.me/jeremyya/jya" target="_blank" rel="noopener noreferrer" class="btn btn-resume">
+                    <span>View Resume</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="contact-container">
+            <div class="section-label">Let's Work Together</div>
+            <h2>Ready to Catch <span class="line-break">Your Next <span class="highlight">Wave?</span></span></h2>
+            <p class="contact-intro">Whether you're looking to breathe life into your brand with authentic motion graphics or need a creative partner for your next campaign, let's talk.</p>
+            
+            <form class="contact-form" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="your@email.com">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="project">Tell me about your project</label>
+                    <textarea id="project" name="project" rows="6" required placeholder="What are you looking to create? Feel free to share any details about timeline, budget, or creative vision..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-submit">
+                    <span>Paddle Out</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="video-modal" onclick="closeVideoModal()">
+        <div class="video-modal-content" onclick="event.stopPropagation()">
+            <button class="video-close" onclick="closeVideoModal()">&times;</button>
+            <div class="video-wrapper">
+                <iframe id="videoFrame" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openVideoModal(event) {
+            event.preventDefault();
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = 'https://www.youtube.com/embed/Cc0EPSTSUBM?autoplay=1&enablejsapi=1&origin=' + window.location.origin;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoFrame');
+            iframe.src = '';
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeVideoModal();
+            }
+        });
+
+        // Handle contact form submission with mailto
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const project = document.getElementById('project').value;
+            
+            const subject = encodeURIComponent('New Project Inquiry from ' + name);
+            const body = encodeURIComponent(
+                'Name: ' + name + '\n' +
+                'Email: ' + email + '\n\n' +
+                'Project Details:\n' + project
+            );
+            
+            // Replace with your actual email address
+            window.location.href = 'mailto:jeremyya@icloud.com?subject=' + subject + '&body=' + body;
+        });
+    </script>
+</body>
+</html>

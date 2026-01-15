@@ -71,6 +71,235 @@
             filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
         }
 
+        /* Animated Logo Styles */
+        .logo-animated {
+            width: 168px;
+            height: 168px;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.25s forwards, gentleFloat 6s ease-in-out 2.25s infinite;
+            filter: drop-shadow(0 8px 16px rgba(62, 171, 163, 0.25));
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .logo-animated:hover {
+            transform: translateY(-8px) scale(1.08);
+            filter: drop-shadow(0 16px 32px rgba(62, 171, 163, 0.4)) 
+                    drop-shadow(0 0 20px rgba(241, 139, 127, 0.3));
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .logo-animated svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* Logo layer animations */
+        #logo-bg-circle {
+            opacity: 0;
+            transform: scale(0);
+            animation: logoExplodeIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 0.55s;
+            transform-origin: center;
+            transform-box: fill-box;
+        }
+
+        @keyframes logoExplodeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.1) rotate(180deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(360deg);
+            }
+        }
+
+        #logo-teal-circle {
+            opacity: 0;
+            transform: scale(0) rotate(-180deg);
+            animation: logoSpiralIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       logoBreathe 8s ease-in-out 2.75s infinite;
+            animation-delay: 0.75s, 2.75s;
+            transform-origin: center;
+            transform-box: fill-box;
+        }
+
+        @keyframes logoSpiralIn {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-180deg);
+            }
+            70% {
+                opacity: 1;
+                transform: scale(1.08) rotate(20deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes logoBreathe {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.02) rotate(1deg);
+            }
+        }
+
+        .logo-animated:hover #logo-teal-circle {
+            animation: logoSpiralIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+                       logoSpin 4s ease-in-out infinite;
+            animation-delay: 0.75s, 0s;
+        }
+
+        @keyframes logoSpin {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.05) rotate(360deg);
+            }
+        }
+
+        #logo-j-letter, .logo-y-letter, #logo-a-letter {
+            opacity: 0;
+            animation: logoSubtleFadeIn 1.2s ease-out forwards;
+        }
+
+        #logo-j-letter {
+            animation-delay: 1.05s;
+        }
+
+        .logo-y-letter {
+            animation-delay: 1.25s;
+        }
+
+        #logo-a-letter {
+            animation-delay: 1.45s;
+        }
+
+        @keyframes logoSubtleFadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .logo-animated:hover #logo-j-letter {
+            animation: logoSubtleFadeIn 1.2s ease-out forwards,
+                       logoGentleBounce 4s ease-in-out infinite;
+            animation-delay: 1.05s, 0s;
+        }
+
+        .logo-animated:hover .logo-y-letter {
+            animation: logoSubtleFadeIn 1.2s ease-out forwards,
+                       logoGentleWiggle 4.5s ease-in-out infinite;
+            animation-delay: 1.25s, 0.2s;
+        }
+
+        .logo-animated:hover #logo-a-letter {
+            animation: logoSubtleFadeIn 1.2s ease-out forwards,
+                       logoGentleBounce 4s ease-in-out infinite;
+            animation-delay: 1.45s, 0.4s;
+        }
+
+        #logo-outer-ring {
+            opacity: 0;
+            transform: scale(1.8) rotate(360deg);
+            animation: logoExpandRotateIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation-delay: 1.75s;
+            transform-origin: center;
+            transform-box: fill-box;
+        }
+
+        @keyframes logoExpandRotateIn {
+            0% {
+                opacity: 0;
+                transform: scale(1.8) rotate(360deg);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(0.95) rotate(-10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes logoGentleBounce {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-3px) scale(1.01);
+            }
+        }
+
+        @keyframes logoGentleWiggle {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+            }
+            25% {
+                transform: rotate(-0.5deg) scale(1.005);
+            }
+            75% {
+                transform: rotate(0.5deg) scale(1.005);
+            }
+        }
+
+        .logo-st1 {
+            animation: logoShimmer 4s ease-in-out infinite;
+            animation-delay: 2.75s;
+        }
+
+        .logo-animated:hover .logo-st1 {
+            animation: logoShimmerIntense 2s ease-in-out infinite;
+        }
+
+        @keyframes logoShimmer {
+            0%, 100% {
+                opacity: 1;
+                filter: brightness(1) contrast(1.05);
+            }
+            50% {
+                opacity: 0.9;
+                filter: brightness(1.15) contrast(1.1);
+            }
+        }
+
+        @keyframes logoShimmerIntense {
+            0%, 100% {
+                opacity: 1;
+                filter: brightness(1) saturate(1) contrast(1.05);
+            }
+            50% {
+                opacity: 0.95;
+                filter: brightness(1.3) saturate(1.4) contrast(1.15);
+            }
+        }
+
+
         .hero {
             min-height: 100vh;
             display: flex;
@@ -134,6 +363,29 @@
             color: var(--color-coral);
             font-style: italic;
             font-weight: 400;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .logo-animated:hover ~ h1 .creative {
+            text-shadow: 0 0 20px rgba(241, 139, 127, 0.6),
+                         0 0 40px rgba(241, 139, 127, 0.3);
+            transform: translateY(-2px);
+            animation: creativeWave 3s ease-in-out infinite;
+        }
+
+        @keyframes creativeWave {
+            0%, 100% {
+                transform: translateY(-2px) translateX(0);
+            }
+            25% {
+                transform: translateY(-3px) translateX(1px);
+            }
+            50% {
+                transform: translateY(-2px) translateX(0);
+            }
+            75% {
+                transform: translateY(-1px) translateX(-1px);
+            }
         }
 
         .tagline {
@@ -764,7 +1016,53 @@
 </head>
 <body>
     <main class="hero">
-        <img src="logo.png" alt="Wornsurf Logo" class="logo" />
+        <div class="logo-animated" onclick="document.querySelector('.about').scrollIntoView({behavior: 'smooth'})">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 8000 8000">
+                <defs>
+                    <style>
+                        .logo-st0 {
+                            fill: #2ca89c;
+                        }
+                        .logo-st1 {
+                            fill: #f4837d;
+                        }
+                        .logo-st2 {
+                            isolation: isolate;
+                        }
+                        .logo-st3 {
+                            mix-blend-mode: multiply;
+                        }
+                        .logo-st4 {
+                            fill: #f7f2ec;
+                        }
+                    </style>
+                </defs>
+                <g class="logo-st2">
+                    <g id="Layer_1">
+                        <!-- Layer 1: Background circle -->
+                        <circle id="logo-bg-circle" class="logo-st4" cx="4000" cy="3999.95" r="3584.12"/>
+                        
+                        <!-- Layer 2: Teal circle -->
+                        <circle id="logo-teal-circle" class="logo-st0" cx="4000" cy="3999.95" r="2362.47"/>
+                        
+                        <!-- Layer 3: J letter -->
+                        <path id="logo-j-letter" class="logo-st4" d="M4976.67,4595.67c-105.86-107.03-241.77-201.05-393.01-271.89-135.74-63.59-298.37-82.93-470.55-103.39-161.49-19.21-328.48-39.06-500.03-95.42-572.76-188.19-928.56-719.2-928.56-1385.83v-994.72h564.98v994.72c0,606.22,377.59,795.73,539.94,849.07,117.93,38.75,250.27,54.48,390.37,71.14,199.33,23.7,425.25,50.56,643.49,152.78,210.9,98.79,402.83,232.33,555.05,386.22l-401.69,397.32Z"/>
+                        
+                        <!-- Layer 6: Outer ring with coral -->
+                        <g id="logo-outer-ring" class="logo-st3">
+                            <path class="logo-st1" d="M4000,7027.04c-1669.15,0-3027.09-1357.95-3027.09-3027.08S2330.86,972.86,4000,972.86s3027.08,1357.95,3027.08,3027.09-1357.95,3027.08-3027.08,3027.08ZM4000,1395.45c-1436.13,0-2604.5,1168.37-2604.5,2604.5s1168.37,2604.49,2604.5,2604.49,2604.49-1168.37,2604.49-2604.49-1168.37-2604.5-2604.49-2604.5Z"/>
+                        </g>
+                        
+                        <!-- Layer 4 & 5: Y and A letters -->
+                        <g>
+                            <path class="logo-y-letter logo-st4" d="M3386.2,4353.42c-186.78-65.2-349.94-167.09-484.18-298.74l-1052.09,1326.55c63.84,53.22,111.06,126.01,135.36,208.39,47.51,30.1,88.08,70.05,119.8,116.77h208.07l148.55-187.3,749.14-944.57s0,0,0,0l175.35-221.1Z"/>
+                            
+                            <path id="logo-a-letter" class="logo-st4" d="M5274.01,1826.12c-4.33-2.89-8.72-5.66-13.12-8.41-3.48-.75-6.79-1.67-10.41-2.35-80.04-14.86-144.93-57.63-193.31-115.48h-287.55l-1513.59,1908.44c114.6,129.48,249.34,190.09,330.41,216.73,58.21,19.13,119.95,32.62,184.38,43.41l1076.01-1356.7v1987.71c0,451.97-367.72,819.69-819.7,819.69-294.99,0-554-156.68-698.41-391.14l-358.35,465.17c254.19,300.11,633.57,490.96,1056.76,490.96,763.52,0,1384.68-621.16,1384.68-1384.67V1933.69c-48.03-32.59-92.88-70.43-137.81-107.56Z"/>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
         
         <h1>
             <span class="line">Ride the</span>
